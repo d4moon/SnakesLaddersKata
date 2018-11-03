@@ -9,21 +9,21 @@ namespace SnakesLadders
     [TestFixture]
     public class GameShould
     {
-        //[Test]
-        //public void RunGameUntilAplayerHasWonGivenPlayers()
-        //{
-        //    var fakeDice = new Mock<IDice>();
-        //    fakeDice.Setup(d => d.Roll()).Returns(0);
-        //    var player1 = new Player("player1", fakeDice.Object);
-        //    var dice = new Dice();
-        //    var player2 = new Player("player2", dice);
-        //    var players = new List<Player> { player1, player2 };
-        //    var game = new Game(players);
+        [Test]
+        public void RunGameUntilAplayerHasWonGivenPlayers()
+        {
+            var fakeDice = new Mock<IDice>();
+            fakeDice.Setup(d => d.Roll()).Returns(0);
+            var player1 = new Player("player1", fakeDice.Object);
+            var dice = new Dice();
+            var player2 = new Player("player2", dice);
+            var players = new List<Player> { player1, player2 };
+            var game = new Game(players);
 
-        //    game.Run();
+            game.Run();
 
-        //    game.GetStatus().Should().Be("player2 wins");
-        //}
+            game.GetStatus().Should().Be("player2 wins");
+        }
     }
 
     public class Game
@@ -38,7 +38,7 @@ namespace SnakesLadders
 
         public string GetStatus()
         {
-            return null;
+            return status;
         }
 
         public void Run()
@@ -47,12 +47,14 @@ namespace SnakesLadders
             {
                 player.Move();
 
-                if (player.CurrentTokenPosition() == 100)
+                if (player.IsWinner())
                 {
                     status = player.Name + " wins";
                     return;
                 }
-            }    
+            }
+
+            Run();
         }
     }
 }

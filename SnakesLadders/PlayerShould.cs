@@ -59,6 +59,18 @@ namespace SnakesLadders
 
             player1.CurrentTokenPosition().Should().Be(97);
         }
+
+        [Test]
+        public void WinGivenTokenIsOnWinningPosition()
+        {
+            dice.SetupSequence(d => d.Roll()).Returns(96).Returns(3);
+            player1 = new Player("player1", dice.Object);
+
+            player1.Move();
+            player1.Move();
+
+            player1.IsWinner().Should().BeTrue();
+        }
     }
 
     public class Player
@@ -85,5 +97,7 @@ namespace SnakesLadders
         } 
 
         public int CurrentTokenPosition() => tokenPosition;
+
+        public bool IsWinner() => CurrentTokenPosition() == WinningPosition;
     }
 }
