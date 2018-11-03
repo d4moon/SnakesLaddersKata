@@ -14,40 +14,54 @@ namespace SnakesLadders
     [TestFixture]
     public class PlayerShould
     {
+        private readonly Player player1 = new Player("player1");
+        private readonly Player player2 = new Player("player2");
+
+        [Test]
+        public void IsOnStartPositionGivenInitialised()
+        {
+            var players = new List<Player> { player1, player2 };
+
+            foreach (var player in players)
+            {
+                player.CurrentPosition().Should().Be(0);
+            }
+        }
+
         [Test]
         public void ReceiveRandomDiceNumberGivenDiceRoll()
         {
-            var player = new Player("player1");
-
-            var diceNumber = player.RollDice();
+            var diceNumber = player1.RollDice();
 
             diceNumber.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(6);
         }
 
         [Test]
-        public void IsOnStartPositionGivenInitialised()
+        public void MovePositionByGivenANumber()
         {
-            var players = new List<Player> { new Player("player1"), new Player("player2") };
+            player1.Move(1);
+            player1.Move(4);
 
-            foreach (var player in players)
-            {
-                player.Position.Should().Be(0);
-            }
+            player1.CurrentPosition().Should().Be(5);
         }
     }
 
     public class Player
     {
-        public string Name{ get; }
-        public int Position { get; }
+        public string Name { get; }
+        private int position;
         private readonly Random randome = new Random();
 
         public Player(string name)
         {
             Name = name;
-            Position = 0;
+            position = 0;
         }
 
         public int RollDice() => randome.Next(1, 6);
+
+        public void Move(int numberOfSquares) => position += numberOfSquares;
+
+        public int CurrentPosition() => position;
     }
 }
