@@ -30,7 +30,7 @@ namespace SnakesLadders
 
             foreach (var player in players)
             {
-                player.CurrentPosition().Should().Be(0);
+                player.CurrentPosition().Should().Be(1);
             }
         }
 
@@ -51,7 +51,7 @@ namespace SnakesLadders
             player1.Move(1);
             player1.Move(4);
 
-            player1.CurrentPosition().Should().Be(5);
+            player1.CurrentPosition().Should().Be(6);
         }
     }
 
@@ -64,6 +64,7 @@ namespace SnakesLadders
         public Player(string name)
         {
             Name = name;
+            position = 1;
         }
 
         public int RollDice() => randome.Next(1, 6);
