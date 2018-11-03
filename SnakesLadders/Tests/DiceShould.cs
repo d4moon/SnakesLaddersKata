@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 
-namespace SnakesLadders
+namespace SnakesLadders.Tests
 {
     [TestFixture]
     public class DiceShould

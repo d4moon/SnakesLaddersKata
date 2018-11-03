@@ -3,19 +3,13 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
-namespace SnakesLadders
+namespace SnakesLadders.Tests
 {
-    //the ability to move your token across the board using dice rolls.
-
-    //Player roll a dice, 
-    //Player move token the number of squares indicated by the dice roll 
-    //Player win if they land on square 100.
-
     [TestFixture]
     public class PlayerShould
     {
         private Player player1;
-        private Player player2;
+        private readonly Player player2;
         private readonly Mock<IDice> dice;
 
         public PlayerShould()
@@ -71,33 +65,5 @@ namespace SnakesLadders
 
             player1.IsWinner().Should().BeTrue();
         }
-    }
-
-    public class Player
-    {
-        private const int WinningPosition = 100;
-        private int tokenPosition;
-        private readonly IDice dice;
-
-        public string Name { get; }
-
-        public Player(string name, IDice dice)
-        {
-            Name = name;
-            tokenPosition = 1;
-            this.dice = dice;
-        }
-
-        public void Move()
-        {
-            var diceNumber = dice.Roll();
-
-            if (tokenPosition + diceNumber <= WinningPosition)
-                tokenPosition += diceNumber;
-        } 
-
-        public int CurrentTokenPosition() => tokenPosition;
-
-        public bool IsWinner() => CurrentTokenPosition() == WinningPosition;
     }
 }
