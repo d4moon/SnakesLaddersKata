@@ -14,8 +14,8 @@ namespace SnakesLadders
     [TestFixture]
     public class PlayerShould
     {
-        private readonly Player player1;
-        private readonly Player player2;
+        private Player player1;
+        private Player player2;
         private readonly Mock<IDice> dice;
 
         public PlayerShould()
@@ -47,13 +47,27 @@ namespace SnakesLadders
 
             player1.CurrentTokenPosition().Should().Be(6);
         }
+
+        [Test]
+        public void NotMoveTokenPositionGiveDiceNumberExceedsWinningPosition()
+        {
+            dice.SetupSequence(d => d.Roll()).Returns(96).Returns(4);
+            player1 = new Player("player1", dice.Object);
+
+            player1.Move();
+            player1.Move();
+
+            player1.CurrentTokenPosition().Should().Be(97);
+        }
     }
 
     public class Player
     {
-        public string Name { get; }
+        private const int WinningPosition = 100;
         private int tokenPosition;
         private readonly IDice dice;
+
+        public string Name { get; }
 
         public Player(string name, IDice dice)
         {
@@ -62,7 +76,13 @@ namespace SnakesLadders
             this.dice = dice;
         }
 
-        public void Move() => tokenPosition += dice.Roll();
+        public void Move()
+        {
+            var diceNumber = dice.Roll();
+
+            if (tokenPosition + diceNumber <= WinningPosition)
+                tokenPosition += diceNumber;
+        } 
 
         public int CurrentTokenPosition() => tokenPosition;
     }
