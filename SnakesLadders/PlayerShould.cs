@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 
 namespace SnakesLadders
@@ -16,61 +16,54 @@ namespace SnakesLadders
     {
         private readonly Player player1;
         private readonly Player player2;
+        private readonly Mock<IDice> dice;
 
         public PlayerShould()
         {
-            player1 = new Player("player1");
-            player2 = new Player("player2");
+            dice = new Mock<IDice>();
+
+            player1 = new Player("player1", dice.Object);
+            player2 = new Player("player2", dice.Object);
         }
 
         [Test]
-        public void IsOnStartPositionGivenInitialised()
+        public void HaveTokenOnStartPositionGivenInitialised()
         {
             var players = new List<Player> { player1, player2 };
 
             foreach (var player in players)
             {
-                player.CurrentPosition().Should().Be(1);
+                player.CurrentTokenPosition().Should().Be(1);
             }
         }
 
         [Test]
-        public void ReceiveRandomDiceNumberGivenDiceRoll()
+        public void MoveTokenPositionGivenDiceRolledNumber()
         {
-            var diceNumber = player1.RollDice();
+            dice.SetupSequence(d => d.Roll()).Returns(1).Returns(4);
 
-            diceNumber.Should()
-                .BeGreaterOrEqualTo(1)
-                .And
-                .BeLessOrEqualTo(6);
-        }
+            player1.Move();
+            player1.Move();
 
-        [Test]
-        public void MovePositionGivenNumberOfSquares()
-        {
-            player1.Move(1);
-            player1.Move(4);
-
-            player1.CurrentPosition().Should().Be(6);
+            player1.CurrentTokenPosition().Should().Be(6);
         }
     }
 
     public class Player
     {
         public string Name { get; }
-        private int position;
-        private readonly Random randome = new Random();
+        private int tokenPosition;
+        private readonly IDice dice;
 
-        public Player(string name)
+        public Player(string name, IDice dice)
         {
             Name = name;
-            position = 1;
+            tokenPosition = 1;
+            this.dice = dice;
         }
 
-        public int RollDice() => randome.Next(1, 6);
+        public void Move() => tokenPosition += dice.Roll();
 
-        public void Move(int numberOfSquares) => position += numberOfSquares;
-
-        public int CurrentPosition() => position;
+        public int CurrentTokenPosition() => tokenPosition;
     }
 }
