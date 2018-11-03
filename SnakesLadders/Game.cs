@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace SnakesLadders
 {
@@ -20,7 +19,7 @@ namespace SnakesLadders
             var players = new List<Player> { player1, player2 };
             var game = new Game(players);
 
-            game.Run();
+            game.PlayUntilPlayerWins();
 
             game.GetStatus().Should().Be("player2 wins");
         }
@@ -41,20 +40,21 @@ namespace SnakesLadders
             return status;
         }
 
-        public void Run()
+        public void PlayUntilPlayerWins()
         {
-            foreach (var player in players)
+            while (true)
             {
-                player.Move();
-
-                if (player.IsWinner())
+                foreach (var player in players)
                 {
-                    status = player.Name + " wins";
-                    return;
+                    player.Move();
+
+                    if (player.IsWinner())
+                    {
+                        status = player.Name + " wins";
+                        return;
+                    }
                 }
             }
-
-            Run();
         }
     }
 }
