@@ -9,14 +9,16 @@ namespace SnakesLadders.Tests
     public class GameShould
     {
         [Test]
-        public void RunGameUntilAplayerHasWonGivenPlayers()
+        public void RunUntilOnePlayerWins()
         {
             var fakeDice = new Mock<IDice>();
             fakeDice.Setup(d => d.Roll()).Returns(0);
-            var player1 = new Player("player1", fakeDice.Object);
-            var dice = new Dice();
-            var player2 = new Player("player2", dice);
-            var players = new List<Player> { player1, player2 };
+            var fakePlayer = new Player("player1", fakeDice.Object);
+
+            var realDice = new Dice();
+            var player2 = new Player("player2", realDice);
+
+            var players = new List<Player> { fakePlayer, player2 };
             var game = new Game(players);
 
             game.PlayUntilPlayerWins();
